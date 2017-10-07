@@ -1,0 +1,56 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+	<head>
+    	<title>Getting Started Extension's Popup</title>
+    	<style type="text/css">
+	      	body {
+	        	margin: 10px;
+	        	white-space: nowrap;
+	      	}
+
+	      	h1 {
+	        	font-size: 15px;
+	      	}
+
+	      	#container {
+	        	align-items: center;
+	        	display: flex;
+	        	justify-content: space-between;
+	      	}
+
+	      	.button{
+	     		background-color: #FF0047;
+	     		padding: 8px 16px;
+	     		display: inline-block;
+	     		text-decoration: none;
+	     		color: #FFFFFF;
+	     		border-radius: 3px;
+	     		width: 100%;
+	      	}
+
+	      	.button:hover{ 
+	      		background-color: #AB0030;
+	      	}
+    	</style>
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+    -->
+    	<script src="mute.js"></script>
+  	</head>
+
+  	<body>
+    	<h1>Mute Twitch Homepage</h1>
+    	<div id="container">
+    		<button type="button" id="js-mute-twitch" class="button">Mute</button>
+    	</div>
+  	</body>
+</html>

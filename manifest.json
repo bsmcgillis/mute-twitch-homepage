@@ -1,0 +1,25 @@
+{
+	"manifest_version": 2,
+  	"name": "Mute Twitch Homepage",
+    "description": "This extension will mute the video player on Twitch's homepage",
+  	"version": "1.0",
+
+  	"browser_action": {
+    	"default_icon": "mute-icon.png"
+    	// "default_popup": "mute.html"
+  	},
+  	"permissions": [
+	    "activeTab",
+    	"storage"
+  	],
+  	"content_scripts": [
+	  	{
+			"matches": ["https://go.twitch.tv/", "https://www.google.com/"],
+	 	   	"js": ["mute.js"],
+	 	   	"run_at": "document_end"
+	  	}
+	],
+	"background": {
+		"scripts": ["mute-bg.js"]
+	}
+}

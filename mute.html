@@ -20,11 +20,16 @@
 	      	#container {
 	        	align-items: center;
 	        	display: flex;
+	        	flex-direction: column;
 	        	justify-content: space-between;
 	      	}
 
-	      	.button{
-	     		background-color: #FF0047;
+	      	.container-element {
+	      		padding: 5px 0;
+	      	}
+
+	      	.button {
+	     		/*background-color: #FF0047;*/
 	     		padding: 8px 16px;
 	     		display: inline-block;
 	     		text-decoration: none;
@@ -33,8 +38,24 @@
 	     		width: 100%;
 	      	}
 
-	      	.button:hover{ 
+	      	/*.button:hover { 
 	      		background-color: #AB0030;
+	      	}*/
+
+	      	.button.mute {
+	      		background-color: #03BC41;
+	      	}
+
+	      	.button.mute:hover {
+	      		background-color: #01892E;
+	      	}
+
+	      	.button.unmute {
+	      		background-color: #D80404;
+	      	}
+
+	      	.button.unmute:hover {
+	      		background-color: #8E0202;
 	      	}
     	</style>
 
@@ -44,13 +65,19 @@
       -
       - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
     -->
-    	<script src="mute.js"></script>
+    	<script src="popup.js"></script>
   	</head>
 
   	<body>
     	<h1>Mute Twitch Homepage</h1>
     	<div id="container">
-    		<button type="button" id="js-mute-twitch" class="button">Mute</button>
+    		<div class="container-element">
+    			<label>Permanently Mute</label>
+    			<input type="checkbox" id="js-mute-perm" />
+    		</div>
+    		<div class="container-element">
+    			<button type="button" id="js-mute-temp" class="button unmute">Temporarily Mute</button>
+    		</div>
     	</div>
   	</body>
 </html>

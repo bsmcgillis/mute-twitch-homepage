@@ -5,18 +5,18 @@
   	"version": "1.0",
 
   	"browser_action": {
-    	"default_icon": "mute-icon.png"
-    	// "default_popup": "mute.html"
+    	"default_icon": "mute-icon.png",
+    	"default_popup": "mute.html"
   	},
   	"permissions": [
 	    "activeTab",
     	"storage",
-        "https://go.twitch.tv/",
-        "https://www.google.com/"
+        "http://*/*",
+        "https://*/*"
   	],
   	"content_scripts": [
 	  	{
-			"matches": ["https://go.twitch.tv/", "https://www.google.com/"],
+			"matches": ["http://*/*", "https://*/*"],
 	 	   	"js": ["mute.js"],
 	 	   	"run_at": "document_end"
 	  	}

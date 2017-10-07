@@ -4,26 +4,27 @@
  */
 
 chrome.runtime.onMessage.addListener( function( message, sender, sendResponse){
-	if( message.action == 'mute' ){
-		muteCurrentTab( sendResponse );
-	}
-	// sendResponse( {message: 'something' } ); //this does send
+	setCurrentTabMuteStatus( message.mute, sendResponse );
 });
 
-function muteCurrentTab( sendResponse ) {
-  var queryInfo = {
-    active: true,
-    currentWindow: true
-  };
+function setCurrentTabMuteStatus( mute, sendResponse ) {
+	var queryInfo = {
+    	active: true,
+    	currentWindow: true
+  	};
 
-  chrome.tabs.query(queryInfo, (tabs) => {
-    var tab = tabs[0];
+  	chrome.tabs.query(queryInfo, (tabs) => {
+    	var tab = tabs[0];
 
-    //Maybe if I rewrite this as a lambda function, it'll have access to the sendResponse callback
-    chrome.tabs.update(tab.id, {muted: true}, function(result){
-    	if( result.mutedInfo.muted ){
-    		sendResponse( { message: 'Tab Muted!' } ); //this isn't sending
-    	}
-    });
-  });
+    	chrome.tabs.update(tab.id, {muted: mute}, (result) => {
+    		//I'd love to send a success response back on the
+    		//sendResponse callback, but it doesn't work for some reason
+    	});
+  	});
 }
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+	console.log( 'tabId: ', tabId ); //@DEBUG
+	console.log( 'changeInfo: ', changeInfo ); //@DEBUG
+	console.log( 'tab: ', tab ); //@DEBUG
+});

@@ -1,16 +1,29 @@
-function changeMuteStatus(){
-	//need to also set the button text
+/**
+ * You can view the console of this background file by clicking on the 
+ * "Inspect Views: background page" link in the chrome://extension page
+ */
 
-	var script = [
-		'var divs = document.querySelectorAll("div.vertical-carousel-player");',
-		'for (var i = 0; i < divs.length; i++) {',
-			'divs[i].parentNode.removeChild(divs[i]);',
-		'}'
-	].join('');
+chrome.runtime.onMessage.addListener( function( message, sender, sendResponse){
+	if( message.action == 'mute' ){
+		muteCurrentTab( sendResponse );
+	}
+	// sendResponse( {message: 'something' } ); //this does send
+});
 
-	// var script = 'document.body.style.backgroundColor="green";';
+function muteCurrentTab( sendResponse ) {
+  var queryInfo = {
+    active: true,
+    currentWindow: true
+  };
 
-	chrome.tabs.executeScript({
-	  code: script
-	});
+  chrome.tabs.query(queryInfo, (tabs) => {
+    var tab = tabs[0];
+
+    //Maybe if I rewrite this as a lambda function, it'll have access to the sendResponse callback
+    chrome.tabs.update(tab.id, {muted: true}, function(result){
+    	if( result.mutedInfo.muted ){
+    		sendResponse( { message: 'Tab Muted!' } ); //this isn't sending
+    	}
+    });
+  });
 }

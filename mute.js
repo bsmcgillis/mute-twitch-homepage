@@ -3,57 +3,27 @@
 // found in the LICENSE file.
 
 var muted = false;
-changeMuteStatus();
+maybeMuteTab();
 
-getCurrentTabUrl((url) => {
-
+function maybeMuteTab(){
 	// var button = document.getElementById('js-mute-twitch');
 
-	// getMuteStatus( (response) => {
-	// 	if( response.hasOwnProperty('twitchSettingsMuted') && response['twitchSettingsMuted'] ){
-	// 		muted = true;
-	// 		changeMuteStatus();
-	// 	}
-	// });
+	getMuteStatus( (response) => {
+		console.log( 'muted check response: ', response ); //@DEBUG
+		if( response.hasOwnProperty('twitchSettingsMuted') && response['twitchSettingsMuted'] ){
+			muted = true;
+			changeMutedStatus();
+		}else{
+			changeMutedStatus();
+		}
+	});
 
+	//I'll need to update this to have the permanent and temporary mute options
+	//Maybe a checkbox for permanent mute and a button to temporarily mute or unmute
 	// button.addEventListener('click', () => {
-	// 	changeMuteStatus();
-	// 	saveMuteStatus();
+	// 	changeMutedStatus();
+	// 	saveMutedStatus();
 	// });
-});
-
-chrome.extension.sendMessage({ action: 'mute' }, function(response){
-	console.log( response.message ); //@DEBUG
-});
-
-/**
- * Get the current URL.
- *
- * @param {function(string)} callback called when the URL of the current tab
- *   is found.
- */
-function getCurrentTabUrl(callback) {
-  var queryInfo = {
-    active: true,
-    currentWindow: true
-  };
-
-  chrome.tabs.query(queryInfo, (tabs) => {
-    var tab = tabs[0];
-    var url = tab.url;
-    console.assert(typeof url == 'string', 'tab.url should be a string');
-
-    callback(url);
-  });
-
-  // Most methods of the Chrome extension APIs are asynchronous. This means that
-  // you CANNOT do something like this:
-  //
-  // var url;
-  // chrome.tabs.query(queryInfo, (tabs) => {
-  //   url = tabs[0].url;
-  // });
-  // alert(url); // Shows "undefined", because chrome.tabs.query is async.
 }
 
 function getMuteStatus(callback){
@@ -62,23 +32,14 @@ function getMuteStatus(callback){
 	});
 }
 
-function changeMuteStatus(){
+function changeMutedStatus(){
 	//need to also set the button text
 
-	var script = [
-		'var divs = document.querySelectorAll("div.vertical-carousel-player");',
-		'for (var i = 0; i < divs.length; i++) {',
-			'divs[i].parentNode.removeChild(divs[i]);',
-		'}'
-	].join('');
-
-	// var script = 'document.body.style.backgroundColor="green";';
-
-	chrome.tabs.executeScript({
-	  code: script
+	chrome.extension.sendMessage({ action: 'mute' }, function(response){
+		console.log( 'Muting response: ', response.message ); //@DEBUG
 	});
 }
 
-function saveMuteStatus(){
-	chrome.storage.sync.set({ 'twitchSettingsMuted' : !muted });
+function saveMutedStatus(){
+	chrome.storage.sync.set({ 'twitchSettingsMuted' : ! muted });
 }

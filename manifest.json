@@ -10,7 +10,9 @@
   	},
   	"permissions": [
 	    "activeTab",
-    	"storage"
+    	"storage",
+        "https://go.twitch.tv/",
+        "https://www.google.com/"
   	],
   	"content_scripts": [
 	  	{

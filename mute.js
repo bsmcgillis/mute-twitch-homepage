@@ -2,32 +2,40 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-var mute = false;
-
 //I think here, I need to listen for an event from mute-bg to see if
 //the URL has changed. I guess when I first land on a page, I can store
 //whatever the URL was. And then in the background file, I can constantly
 //being listening for the URL to change. When it does, I'll fire a message
 //to this file. 
 
+/**
+ * Fire the mute check when we first land on a page
+ */
+maybeMuteTab();
 
-if( location.href === 'https://go.twitch.tv/' ){
-	maybeMuteTab();
-}else{
-	setMuteStatus();
-}
+
+/**
+ * Also listen for when the URL changes, but a full page change event 
+ * hasn't fired, like on SPA applications.
+ */
+chrome.extension.onMessage.addListener( function( message, sender, sendResponse ){
+	if( message.hasOwnProperty( 'action' ) && message.action === 'url_changed' ){
+		maybeMuteTab();
+	}
+});
 
 function maybeMuteTab(){
-
-	getMuteStatus( (response) => {
-		console.log( 'mute check response in mute.js: ', response ); //@DEBUG
-		if( response.hasOwnProperty('twitchSettingsMuted') && response['twitchSettingsMuted'] ){
-			mute = true;
-			setMuteStatus();
-		}else{
-			setMuteStatus();
-		}
-	});
+	if( location.href === 'https://go.twitch.tv/' ){
+		getMuteStatus( (response) => {
+			if( response.hasOwnProperty('twitchSettingsMuted') && response['twitchSettingsMuted'] ){
+				setMuteStatus( true );
+			}else{
+				setMuteStatus( false );
+			}
+		});	
+	}else{
+		setMuteStatus( false );
+	}
 }
 
 function getMuteStatus(callback){
@@ -36,9 +44,6 @@ function getMuteStatus(callback){
 	});
 }
 
-function setMuteStatus(){
-	chrome.extension.sendMessage({ mute: mute }, function(response){
-		//The response from this call is always undefined for some reason
-		// console.log( 'Muting response: ', response.message ); //@DEBUG
-	});
+function setMuteStatus( mute ){
+	chrome.extension.sendMessage( { mute: mute }, function(response){} );
 }

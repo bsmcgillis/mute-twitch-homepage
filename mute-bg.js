@@ -4,7 +4,9 @@
  */
 
 chrome.runtime.onMessage.addListener( function( message, sender, sendResponse){
-	setCurrentTabMuteStatus( message.mute, sendResponse );
+	if( message.hasOwnProperty( 'mute' ) ){
+		setCurrentTabMuteStatus( message.mute, sendResponse );
+	}
 });
 
 function setCurrentTabMuteStatus( mute, sendResponse ) {
@@ -24,7 +26,7 @@ function setCurrentTabMuteStatus( mute, sendResponse ) {
 }
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
-	console.log( 'tabId: ', tabId ); //@DEBUG
-	console.log( 'changeInfo: ', changeInfo ); //@DEBUG
-	console.log( 'tab: ', tab ); //@DEBUG
+	if( changeInfo.hasOwnProperty('url') && changeInfo.url ){
+		chrome.tabs.sendMessage( tabId, { action: 'url_changed' }, function(response){} );
+	}
 });

@@ -14,7 +14,6 @@ var tempMuteElem;
 document.addEventListener('DOMContentLoaded', () => {
 	getCurrentTabUrl((url) => {
 		if( url !== 'https://go.twitch.tv/' ){
-			setMuteStatus( false, (response) => {});
 	  		return;
 	  	}
 

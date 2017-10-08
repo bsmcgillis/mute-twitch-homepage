@@ -54,11 +54,12 @@ function toggleMuteStatus( temp ){
 	var muteStatus;
 
 	if( temp ){
-		tempMute = ! tempMute;
-		muteStatus = tempMute;
+		tempMute 	= ! tempMute;
+		muteStatus 	= tempMute;
 	}else{
-		permMute = ! permMute;
-		muteStatus = permMute;
+		permMute 	= ! permMute;
+		tempMute 	= permMute;
+		muteStatus 	= permMute;
 	}
 
 	setMuteStatus( muteStatus, (response) => {

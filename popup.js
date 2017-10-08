@@ -12,33 +12,54 @@ var tempMuteElem;
  * mute.html to be loaded before interacting with any of the content
  */
 document.addEventListener('DOMContentLoaded', () => {
-	getCurrentTabUrl((url) => {
-		if( url !== 'https://go.twitch.tv/' ){
-	  		return;
+	getCurrentTab( (tab) => {
+
+		var twitchContainer = document.getElementById('twitch-container');
+  		var nonTwitchContainer = document.getElementById('non-twitch-container');
+
+		if( tab.url !== 'https://go.twitch.tv/' ){
+			twitchContainer.style.display 		= 'none';
+			nonTwitchContainer.style.display 	= 'flex';
+			setNonTwitchHTML();
+	  	}else{
+			nonTwitchContainer.style.display 	= 'none';
+			twitchContainer.style.display 		= 'flex';
+	  		setTwitchHTML();
 	  	}
-
-	  	tempMuteElem = document.getElementById('js-mute-temp');
-	  	permMuteElem = document.getElementById('js-mute-perm');
-
-	  	getMuteStatus( (response) => {
-	  		if( response.hasOwnProperty('twitchSettingsMuted') && response['twitchSettingsMuted'] ){
-	  			permMute = true;
-	  			tempMute = true;
-	  		}
-
-	  		setUpHtmlElements();
-	  	});
-
-	  	tempMuteElem.addEventListener('click', () => {
-	  		toggleMuteStatus( true );
-	  	});
-
-		permMuteElem.addEventListener('change', () => {
-	  		toggleMuteStatus( false );
-	  		saveMuteStatus();
-	  	});
 	});
 });
+
+function setTwitchHTML(){
+  	tempMuteElem = document.getElementById('js-mute-temp');
+  	permMuteElem = document.getElementById('js-mute-perm');
+
+  	getMuteStatus( (response) => {
+  		if( response.hasOwnProperty('twitchSettingsMuted') && response['twitchSettingsMuted'] ){
+  			permMute = true;
+  			tempMute = true;
+  		}
+
+  		updateHtmlElements();
+  	});
+
+  	tempMuteElem.addEventListener('click', () => {
+  		toggleMuteStatus( true );
+  	});
+
+	permMuteElem.addEventListener('change', () => {
+  		toggleMuteStatus( false );
+  		saveMuteStatus();
+  	});
+}
+
+function setNonTwitchHTML(){
+	var twitchLink = document.getElementById('twitch-link');
+	twitchLink.addEventListener('click', () => {
+		getCurrentTab( (tab) => {
+			chrome.tabs.update( tab.id, { url: 'https://go.twitch.tv/' } );
+		});
+	});
+}
 
 function getMuteStatus(callback){
 	chrome.storage.sync.get( 'twitchSettingsMuted', (muted) => {
@@ -63,7 +84,7 @@ function toggleMuteStatus( temp ){
 	}
 
 	setMuteStatus( muteStatus, (response) => {
-		setUpHtmlElements();
+		updateHtmlElements();
 	});
 }
 
@@ -77,7 +98,7 @@ function saveMuteStatus(){
 	chrome.storage.sync.set({ 'twitchSettingsMuted' : permMute });
 }
 
-function setUpHtmlElements(  ){
+function updateHtmlElements(  ){
 	if( tempMute ){
 		tempMuteElem.innerText = "Temporarily Unmute";
 		tempMuteElem.classList.remove('unmute');
@@ -95,7 +116,7 @@ function setUpHtmlElements(  ){
 	}
 }
 
-function getCurrentTabUrl(callback) {
+function getCurrentTab(callback) {
 	var queryInfo = {
     	active: true,
     	currentWindow: true
@@ -103,8 +124,7 @@ function getCurrentTabUrl(callback) {
 
   	chrome.tabs.query(queryInfo, (tabs) => {
     	var tab = tabs[0];
-    	var url = tab.url;
 
-    	callback(url);
+    	callback(tab);
   	});
 }

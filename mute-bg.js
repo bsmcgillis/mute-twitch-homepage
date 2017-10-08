@@ -18,10 +18,7 @@ function setCurrentTabMuteStatus( mute, sendResponse ) {
   	chrome.tabs.query(queryInfo, (tabs) => {
     	var tab = tabs[0];
 
-    	chrome.tabs.update(tab.id, {muted: mute}, (result) => {
-    		//I'd love to send a success response back on the
-    		//sendResponse callback, but it doesn't work for some reason
-    	});
+    	chrome.tabs.update( tab.id, {muted: mute} );
   	});
 }
 

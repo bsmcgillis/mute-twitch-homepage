@@ -8,7 +8,7 @@ var permMuteElem;
 var tempMuteElem;
 
 /**
- * Fires on DOMContentLoaded because we need to wait for the DOM in the 
+ * Fires on DOMContentLoaded because we need to wait for the DOM in the
  * mute.html to be loaded before interacting with any of the content
  */
 document.addEventListener('DOMContentLoaded', () => {
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		var twitchContainer = document.getElementById('twitch-container');
   		var nonTwitchContainer = document.getElementById('non-twitch-container');
 
-		if( tab.url !== 'https://go.twitch.tv/' ){
+		if( tab.url !== 'https://www.twitch.tv/' ){
 			twitchContainer.style.display 		= 'none';
 			nonTwitchContainer.style.display 	= 'flex';
 			setNonTwitchHTML();
@@ -56,7 +56,7 @@ function setNonTwitchHTML(){
 	var twitchLink = document.getElementById('twitch-link');
 	twitchLink.addEventListener('click', () => {
 		getCurrentTab( (tab) => {
-			chrome.tabs.update( tab.id, { url: 'https://go.twitch.tv/' } );
+			chrome.tabs.update( tab.id, { url: 'https://www.twitch.tv/' } );
 		});
 	});
 }

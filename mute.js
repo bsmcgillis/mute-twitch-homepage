@@ -6,7 +6,7 @@
 //the URL has changed. I guess when I first land on a page, I can store
 //whatever the URL was. And then in the background file, I can constantly
 //being listening for the URL to change. When it does, I'll fire a message
-//to this file. 
+//to this file.
 
 /**
  * Fire the mute check when we first land on a page
@@ -15,7 +15,7 @@ maybeMuteTab();
 
 
 /**
- * Also listen for when the URL changes, but a full page change event 
+ * Also listen for when the URL changes, but a full page change event
  * hasn't fired, like on SPA applications.
  */
 chrome.extension.onMessage.addListener( function( message, sender, sendResponse ){
@@ -25,14 +25,14 @@ chrome.extension.onMessage.addListener( function( message, sender, sendResponse 
 });
 
 function maybeMuteTab(){
-	if( location.href === 'https://go.twitch.tv/' ){
+	if( location.href === 'https://www.twitch.tv/' ){
 		getMuteStatus( (response) => {
 			if( response.hasOwnProperty('twitchSettingsMuted') && response['twitchSettingsMuted'] ){
 				setMuteStatus( true );
 			}else{
 				setMuteStatus( false );
 			}
-		});	
+		});
 	}else{
 		setMuteStatus( false );
 	}
